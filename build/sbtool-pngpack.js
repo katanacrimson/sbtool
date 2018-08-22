@@ -26,7 +26,7 @@ app
             throw new Error('The specified target directory does not exist or is not readable.');
         }
         const evaluator = (file, stats) => {
-            return (stats.isFile() && path.extname(file) === '.png');
+            return (stats.isFile() && path.extname(file) !== '.png');
         };
         const files = await readdir(target, [evaluator]);
         let failed = false;

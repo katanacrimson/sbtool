@@ -30,7 +30,7 @@ app
       }
 
       const evaluator = (file: string, stats: fs.Stats) => {
-        return (stats.isFile() && path.extname(file) === '.png')
+        return (stats.isFile() && path.extname(file) !== '.png')
       }
 
       const files = await readdir(target, [evaluator])
