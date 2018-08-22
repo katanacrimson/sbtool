@@ -1,0 +1,45 @@
+{
+  "name": "sbtool",
+  "version": "1.0.0",
+  "description": "sbtool - A collection of Starbound modding command-line tools.",
+  "scripts": {
+    "style": "tslint ./src/*.ts -p ./tsconfig.json",
+    "test": "npm run style",
+    "build": "tsc",
+    "qc": "npm run build && npm run style",
+    "prepublishOnly": "npm run build"
+  },
+  "bin": {
+    "sbtool": "./build/sbtool.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/damianb/sbtool.git"
+  },
+  "keywords": [
+    "starbound"
+  ],
+  "author": "Damian Bushong <katana@odios.us>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/damianb/sbtool/issues"
+  },
+  "homepage": "https://github.com/damianb/sbtool#readme",
+  "dependencies": {
+    "@types/node": "^8.0.45",
+    "@types/recursive-readdir": "^2.2.0",
+    "@types/sharp": "^0.17.9",
+    "@types/strip-json-comments": "^0.0.30",
+    "commander": "^2.17.1",
+    "fast-json-patch": "^2.0.6",
+    "js-starbound": "^2.0.1",
+    "recursive-readdir": "^2.2.2",
+    "sharp": "^0.20.7",
+    "strip-json-comments": "^2.0.1"
+  },
+  "devDependencies": {
+    "tslint": "^5.11.0",
+    "tslint-config-standard": "^7.1.0",
+    "typescript": "^2.9.0"
+  }
+}
