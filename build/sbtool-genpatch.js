@@ -151,7 +151,7 @@ app
             }
             console.log(`successfully created mod patch file at ${destFilepath}`);
         }
-        console.log(failed ? 'done' : 'failed');
+        console.log(failed ? 'failed' : 'done');
         process.exit(failed ? 1 : 0);
     }
     catch (err) {

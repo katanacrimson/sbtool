@@ -80,7 +80,7 @@ app
         }
       }
 
-      console.log(failed ? 'done' : 'failed')
+      console.log(failed ? 'failed' : 'done')
       process.exit(failed ? 1 : 0)
     } catch (err) {
       console.error(err)

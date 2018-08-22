@@ -73,7 +73,7 @@ app
                 console.log(`crushed ${filePath} down to ${crushedStat.size} bytes, saved ${originalStat.size - crushedStat.size} bytes`);
             }
         }
-        console.log(failed ? 'done' : 'failed');
+        console.log(failed ? 'failed' : 'done');
         process.exit(failed ? 1 : 0);
     }
     catch (err) {
