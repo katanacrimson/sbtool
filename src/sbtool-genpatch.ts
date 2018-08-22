@@ -152,7 +152,7 @@ app
 
         const diff = patch.compare(originalFile, modifiedFile)
         try {
-          const jsonDiff = JSON.stringify(diff, null, 2).replace("\n", "\r\n")
+          const jsonDiff = JSON.stringify(diff, null, 2).replace("\n", "\r\n") // tslint:disable-line:quotemark
           await fs.writeFile(destFilepath, jsonDiff)
         } catch (err) {
           console.error(`failed to write mod patch file to ${destFilepath}`)
