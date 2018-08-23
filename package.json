@@ -32,7 +32,6 @@
     "@types/strip-json-comments": "^0.0.30",
     "commander": "^2.17.1",
     "fast-json-patch": "^2.0.6",
-    "js-starbound": "^2.0.1",
     "recursive-readdir": "^2.2.2",
     "sharp": "^0.20.7",
     "strip-json-comments": "^2.0.1"

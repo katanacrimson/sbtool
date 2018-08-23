@@ -2,12 +2,6 @@
 # yarn lockfile v1
 
 
-"@types/fs-extra@^5.0.4":
-  version "5.0.4"
-  resolved "https://registry.yarnpkg.com/@types/fs-extra/-/fs-extra-5.0.4.tgz#b971134d162cc0497d221adde3dbb67502225599"
-  dependencies:
-    "@types/node" "*"
-
 "@types/node@*":
   version "10.5.7"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-10.5.7.tgz#960d9feb3ade2233bcc9843c918d740b4f78a7cf"
@@ -79,10 +73,6 @@ balanced-match@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/balanced-match/-/balanced-match-1.0.0.tgz#89b4d199ab2bee49de164ea02b89ce462d71b767"
 
-big-integer@^1.6.25:
-  version "1.6.34"
-  resolved "https://registry.yarnpkg.com/big-integer/-/big-integer-1.6.34.tgz#701affc8f0d73c490930a6b482dc23ed6ffc7484"
-
 bl@^1.0.0:
   version "1.2.2"
   resolved "https://registry.yarnpkg.com/bl/-/bl-1.2.2.tgz#a160911717103c07410cef63ef51b397c025af9c"
@@ -115,14 +105,6 @@ buffer-fill@^1.0.0:
 builtin-modules@^1.1.1:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/builtin-modules/-/builtin-modules-1.1.1.tgz#270f076c5a72c02f5b65a47df94c5fe3a278892f"
-
-byteaccordion@^1.1.2:
-  version "1.1.2"
-  resolved "https://registry.yarnpkg.com/byteaccordion/-/byteaccordion-1.1.2.tgz#32e3640b369dc1b09aac8eec69225da3b898b220"
-  dependencies:
-    "@types/fs-extra" "^5.0.4"
-    "@types/node" "^8.0.45"
-    fs-extra "^7.0.0"
 
 chalk@^1.1.3:
   version "1.1.3"
@@ -267,14 +249,6 @@ fs-copy-file-sync@^1.1.1:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/fs-copy-file-sync/-/fs-copy-file-sync-1.1.1.tgz#11bf32c096c10d126e5f6b36d06eece776062918"
 
-fs-extra@^7.0.0:
-  version "7.0.0"
-  resolved "https://registry.yarnpkg.com/fs-extra/-/fs-extra-7.0.0.tgz#8cc3f47ce07ef7b3593a11b9fb245f7e34c041d6"
-  dependencies:
-    graceful-fs "^4.1.2"
-    jsonfile "^4.0.0"
-    universalify "^0.1.0"
-
 fs-minipass@^1.2.5:
   version "1.2.5"
   resolved "https://registry.yarnpkg.com/fs-minipass/-/fs-minipass-1.2.5.tgz#06c277218454ec288df77ada54a03b8702aacb9d"
@@ -313,10 +287,6 @@ glob@^7.1.1:
     once "^1.3.0"
     path-is-absolute "^1.0.0"
 
-graceful-fs@^4.1.2, graceful-fs@^4.1.6:
-  version "4.1.11"
-  resolved "https://registry.yarnpkg.com/graceful-fs/-/graceful-fs-4.1.11.tgz#0e8bdfe4d1ddb8854d64e04ea7c00e2a026e5658"
-
 has-ansi@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/has-ansi/-/has-ansi-2.0.0.tgz#34f5049ce1ecdf2b0649af3ef24e45ed35416d91"
@@ -346,10 +316,6 @@ ini@~1.3.0:
   version "1.3.5"
   resolved "https://registry.yarnpkg.com/ini/-/ini-1.3.5.tgz#eee25f56db1c9ec6085e0c22778083f596abf927"
 
-int64-buffer@^0.1.9:
-  version "0.1.10"
-  resolved "https://registry.yarnpkg.com/int64-buffer/-/int64-buffer-0.1.10.tgz#277b228a87d95ad777d07c13832022406a473423"
-
 is-arrayish@^0.3.1:
   version "0.3.2"
   resolved "https://registry.yarnpkg.com/is-arrayish/-/is-arrayish-0.3.2.tgz#4574a2ae56f7ab206896fb431eaeed066fdf8f03"
@@ -372,16 +338,6 @@ isarray@~1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/isarray/-/isarray-1.0.0.tgz#bb935d48582cba168c06834957a54a3e07124f11"
 
-js-starbound@^2.0.1:
-  version "2.0.1"
-  resolved "https://registry.yarnpkg.com/js-starbound/-/js-starbound-2.0.1.tgz#db28cf8fc5e9ec587e09b2eb3ef9456a453e19cf"
-  dependencies:
-    "@types/node" "^8.0.45"
-    byteaccordion "^1.1.2"
-    sbasset6 "^2.2.1"
-    sbon "^2.3.2"
-    sbvj01 "^2.3.1"
-
 js-tokens@^3.0.2:
   version "3.0.2"
   resolved "https://registry.yarnpkg.com/js-tokens/-/js-tokens-3.0.2.tgz#9866df395102130e38f7f996bceb65443209c25b"
@@ -392,12 +348,6 @@ js-yaml@^3.7.0:
   dependencies:
     argparse "^1.0.7"
     esprima "^4.0.0"
-
-jsonfile@^4.0.0:
-  version "4.0.0"
-  resolved "https://registry.yarnpkg.com/jsonfile/-/jsonfile-4.0.0.tgz#8771aae0799b64076b76640fca058f9c10e33ecb"
-  optionalDependencies:
-    graceful-fs "^4.1.6"
 
 mimic-response@^1.0.0:
   version "1.0.1"
@@ -559,35 +509,6 @@ resolve@^1.3.2:
 safe-buffer@^5.0.1, safe-buffer@^5.1.1, safe-buffer@^5.1.2, safe-buffer@~5.1.0, safe-buffer@~5.1.1:
   version "5.1.2"
   resolved "https://registry.yarnpkg.com/safe-buffer/-/safe-buffer-5.1.2.tgz#991ec69d296e0313747d59bdfd2b745c35f8828d"
-
-sbasset6@^2.2.1:
-  version "2.2.1"
-  resolved "https://registry.yarnpkg.com/sbasset6/-/sbasset6-2.2.1.tgz#6c624aae630bbfe94e80e0517dfc458805274407"
-  dependencies:
-    "@types/fs-extra" "^5.0.4"
-    "@types/node" "^8.0.45"
-    byteaccordion "^1.1.2"
-    fs-extra "^7.0.0"
-    int64-buffer "^0.1.9"
-    sbon "^2.3.2"
-
-sbon@^2.3.2:
-  version "2.3.2"
-  resolved "https://registry.yarnpkg.com/sbon/-/sbon-2.3.2.tgz#2c17de7539037b6ff036441862070aa5da88e84f"
-  dependencies:
-    "@types/node" "^8.0.45"
-    big-integer "^1.6.25"
-    byteaccordion "^1.1.2"
-
-sbvj01@^2.3.1:
-  version "2.3.1"
-  resolved "https://registry.yarnpkg.com/sbvj01/-/sbvj01-2.3.1.tgz#011d600c3b085aaff8caeac61ca0a87297a333e0"
-  dependencies:
-    "@types/fs-extra" "^5.0.4"
-    "@types/node" "^8.0.45"
-    byteaccordion "^1.1.2"
-    fs-extra "^7.0.0"
-    sbon "^2.3.2"
 
 semver@^5.3.0:
   version "5.5.0"
@@ -786,10 +707,6 @@ tunnel-agent@^0.6.0:
 typescript@^2.9.0:
   version "2.9.2"
   resolved "https://registry.yarnpkg.com/typescript/-/typescript-2.9.2.tgz#1cbf61d05d6b96269244eb6a3bce4bd914e0f00c"
-
-universalify@^0.1.0:
-  version "0.1.2"
-  resolved "https://registry.yarnpkg.com/universalify/-/universalify-0.1.2.tgz#b646f69be3942dabcecc9d6639c80dc105efaa66"
 
 util-deprecate@~1.0.1:
   version "1.0.2"

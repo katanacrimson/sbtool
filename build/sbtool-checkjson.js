@@ -81,7 +81,7 @@ app
         if (errors.length > 0) {
             failed = true;
             for (const error of errors) {
-                console.log(error);
+                console.log(error.message);
             }
         }
         console.log(failed ? 'failed' : 'done');
