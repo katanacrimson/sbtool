@@ -16,5 +16,5 @@ app
   .version(pkg.version, '-v, --version')
   .command('genpatch <assets> <modifiedDir> <dest>', 'generate JSON patch files, given a set of original and set of modified files')
   .command('pngpack <target>', 'compress png assets in the target directory to save space')
-  .command('checkjson <target>', 'blah')
+  .command('checkjson <target>', 'validates all files for JSON validity (works around JSON spec violations by Starbound)')
   .parse(process.argv)
