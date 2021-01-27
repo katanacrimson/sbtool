@@ -15,7 +15,7 @@ import * as readdir from 'recursive-readdir'
 import * as stripComments from 'strip-json-comments'
 import * as patch from 'fast-json-patch'
 
-const pkg = JSON.parse(fs.readFileSync('../package.json').toString())
+const pkg = JSON.parse(fs.readFileSync(path.join(__dirname, '../package.json')).toString())
 
 app
   .version(pkg.version, '-v, --version')

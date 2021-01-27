@@ -7,13 +7,13 @@
 // @url <https://github.com/damianb/sbtool>
 //
 Object.defineProperty(exports, "__esModule", { value: true });
-const fs = require("fs-extra");
+const fs = require("fs");
 const path = require("path");
 const os = require("os");
 const app = require("commander");
 const readdir = require("recursive-readdir");
 const stripComments = require("strip-json-comments");
-const pkg = require('../package.json');
+const pkg = JSON.parse(fs.readFileSync(path.join(__dirname, '../package.json')).toString());
 app
     .version(pkg.version, '-v, --version')
     .arguments('<target>')
@@ -21,13 +21,13 @@ app
     try {
         const target = path.resolve(process.cwd(), destDir);
         try {
-            await fs.access(target, fs.constants.R_OK);
+            await fs.promises.access(target, fs.constants.R_OK);
         }
         catch (err) {
             throw new Error('The specified target directory does not exist or is not readable.');
         }
         // these should let us ignore files that should not be JSON.
-        let ignoredFiles = [
+        const ignoredFiles = [
             // .disabled and .objectdisabled exist in the Starbound asset files
             //   we're ignoring them for now, because we probably shouldn't care about these files
             '*.disabled',
@@ -54,14 +54,14 @@ app
         ];
         const files = await readdir(target, ignoredFiles);
         let failed = false;
-        let errors = [];
+        const errors = [];
         for (const filePath of files) {
             // sanity check
             if (!filePath.startsWith(target)) {
                 return;
             }
             let json = null;
-            let originalJSON = stripComments(await fs.readFile(filePath, 'utf8'));
+            const originalJSON = stripComments(await fs.promises.readFile(filePath, 'utf8'));
             try {
                 // trying to work around Starbound's use of multiline strings (in violation of the JSON spec)
                 json = originalJSON.replace(/\r?\n|\r/g, '');
@@ -72,7 +72,7 @@ app
                     json = JSON.parse(originalJSON);
                 }
                 catch (err) {
-                    err.message = `Failed to parse file "${filePath}"` + os.EOL + err.message;
+                    err.message = `Failed to parse file "${filePath}"` + os.EOL + err.message; // eslint-disable-line @typescript-eslint/restrict-plus-operands
                     errors.push(err);
                     continue;
                 }

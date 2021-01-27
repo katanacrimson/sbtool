@@ -14,7 +14,7 @@ import * as app from 'commander'
 import * as readdir from 'recursive-readdir'
 import * as sharp from 'sharp'
 
-const pkg = JSON.parse(fs.readFileSync('../package.json').toString())
+const pkg = JSON.parse(fs.readFileSync(path.join(__dirname, '../package.json')).toString())
 
 app
   .version(pkg.version, '-v, --version')
@@ -84,8 +84,6 @@ app
           console.log(`crushed ${filePath} down to ${crushedStat.size} bytes, saved ${savedBytes} bytes`)
         }
       }
-
-      console.log('failed')
 
       if (failed) {
         console.log('failed')

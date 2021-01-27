@@ -1,6 +1,6 @@
 {
   "name": "sbtool",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "sbtool - A collection of Starbound modding command-line tools.",
   "scripts": {
     "style": "eslint ./src/*.ts",

@@ -7,12 +7,12 @@
 // @url <https://github.com/damianb/sbtool>
 //
 Object.defineProperty(exports, "__esModule", { value: true });
-const fs = require("fs-extra");
+const fs = require("fs");
 const path = require("path");
 const app = require("commander");
 const readdir = require("recursive-readdir");
 const sharp = require("sharp");
-const pkg = require('../package.json');
+const pkg = JSON.parse(fs.readFileSync(path.join(__dirname, '../package.json')).toString());
 app
     .version(pkg.version, '-v, --version')
     .arguments('<target>')
@@ -20,7 +20,7 @@ app
     try {
         const target = path.resolve(process.cwd(), destDir);
         try {
-            await fs.access(target, fs.constants.R_OK);
+            await fs.promises.access(target, fs.constants.R_OK);
         }
         catch (err) {
             throw new Error('The specified target directory does not exist or is not readable.');
@@ -30,6 +30,7 @@ app
         };
         const files = await readdir(target, [evaluator]);
         let failed = false;
+        let totalSaved = 0;
         for (const filePath of files) {
             // sanity check
             if (!filePath.startsWith(target)) {
@@ -46,12 +47,12 @@ app
                 failed = true;
                 continue;
             }
-            const originalStat = await fs.stat(filePath);
-            const crushedStat = await fs.stat(filePath + '.crushed');
+            const originalStat = await fs.promises.stat(filePath);
+            const crushedStat = await fs.promises.stat(filePath + '.crushed');
             if (originalStat.size <= crushedStat.size) {
                 console.log(`not crushing ${filePath}, original is smaller than crushed variant`);
                 try {
-                    await fs.unlink(filePath + '.crushed');
+                    await fs.promises.unlink(filePath + '.crushed');
                 }
                 catch (err) {
                     console.error(`failed to remove crushed file ${filePath + '.crushed'}`);
@@ -62,7 +63,8 @@ app
             }
             else {
                 try {
-                    await fs.move(filePath + '.crushed', filePath, { overwrite: true });
+                    await fs.promises.copyFile(filePath + '.crushed', filePath);
+                    await fs.promises.unlink(filePath + '.crushed');
                 }
                 catch (err) {
                     console.error(`failed to replace file ${filePath}`);
@@ -70,11 +72,18 @@ app
                     failed = true;
                     continue;
                 }
-                console.log(`crushed ${filePath} down to ${crushedStat.size} bytes, saved ${originalStat.size - crushedStat.size} bytes`);
+                const savedBytes = originalStat.size - crushedStat.size;
+                totalSaved += savedBytes;
+                console.log(`crushed ${filePath} down to ${crushedStat.size} bytes, saved ${savedBytes} bytes`);
             }
         }
-        console.log(failed ? 'failed' : 'done');
-        process.exit(failed ? 1 : 0);
+        if (failed) {
+            console.log('failed');
+            process.exit(1);
+        }
+        console.log('done');
+        console.log(`saved ${totalSaved} bytes in total`);
+        process.exit(0);
     }
     catch (err) {
         console.error(err);
