@@ -6,7 +6,7 @@
 // @url <https://github.com/damianb/sbtool>
 //
 
-import * as fs from 'fs-extra'
+import * as fs from 'fs'
 import * as path from 'path'
 import * as os from 'os'
 
@@ -15,7 +15,7 @@ import * as app from 'commander'
 import * as readdir from 'recursive-readdir'
 import * as stripComments from 'strip-json-comments'
 
-const pkg = require('../package.json')
+const pkg = JSON.parse(fs.readFileSync('../package.json').toString())
 
 app
   .version(pkg.version, '-v, --version')
@@ -25,17 +25,17 @@ app
       const target = path.resolve(process.cwd(), destDir)
 
       try {
-        await fs.access(target, fs.constants.R_OK)
+        await fs.promises.access(target, fs.constants.R_OK)
       } catch (err) {
         throw new Error('The specified target directory does not exist or is not readable.')
       }
 
       // these should let us ignore files that should not be JSON.
-      let ignoredFiles = [
+      const ignoredFiles = [
         // .disabled and .objectdisabled exist in the Starbound asset files
         //   we're ignoring them for now, because we probably shouldn't care about these files
         '*.disabled', // ignored for now. @todo: reconsider?
-        '*.objectdisabled',  // ignored for now. @todo: reconsider?
+        '*.objectdisabled', // ignored for now. @todo: reconsider?
         '*.ase', // no idea why an ASE file is in the Starbound assets...lol Chucklefish.
         '*.md',
         '*.png',
@@ -60,7 +60,7 @@ app
       const files = await readdir(target, ignoredFiles)
 
       let failed = false
-      let errors: Error[] = []
+      const errors: Error[] = []
       for (const filePath of files) {
         // sanity check
         if (!filePath.startsWith(target)) {
@@ -68,7 +68,7 @@ app
         }
 
         let json = null
-        let originalJSON = stripComments(await fs.readFile(filePath, 'utf8'))
+        const originalJSON = stripComments(await fs.promises.readFile(filePath, 'utf8'))
         try {
           // trying to work around Starbound's use of multiline strings (in violation of the JSON spec)
           json = originalJSON.replace(/\r?\n|\r/g, '')
@@ -77,7 +77,7 @@ app
           try {
             json = JSON.parse(originalJSON)
           } catch (err) {
-            err.message = `Failed to parse file "${filePath}"` + os.EOL + err.message
+            err.message = `Failed to parse file "${filePath}"` + os.EOL + err.message // eslint-disable-line @typescript-eslint/restrict-plus-operands
             errors.push(err)
             continue
           }

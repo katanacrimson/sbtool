@@ -6,7 +6,7 @@
 // @url <https://github.com/damianb/sbtool>
 //
 
-import * as fs from 'fs-extra'
+import * as fs from 'fs'
 import * as path from 'path'
 
 import * as app from 'commander'
@@ -15,7 +15,7 @@ import * as readdir from 'recursive-readdir'
 import * as stripComments from 'strip-json-comments'
 import * as patch from 'fast-json-patch'
 
-const pkg = require('../package.json')
+const pkg = JSON.parse(fs.readFileSync('../package.json').toString())
 
 app
   .version(pkg.version, '-v, --version')
@@ -26,21 +26,21 @@ app
       const target = path.resolve(process.cwd(), destDir)
 
       try {
-        await fs.access(assetPath, fs.constants.R_OK)
-        await fs.access(path.join(assetPath, '/player.config'), fs.constants.R_OK)
+        await fs.promises.access(assetPath, fs.constants.R_OK)
+        await fs.promises.access(path.join(assetPath, '/player.config'), fs.constants.R_OK)
       } catch (err) {
-        await fs.access(target, fs.constants.R_OK)
+        await fs.promises.access(target, fs.constants.R_OK)
         throw new Error('The assets path either does not exist or is not correctly unpacked.')
       }
 
       try {
-        await fs.access(source, fs.constants.R_OK)
+        await fs.promises.access(source, fs.constants.R_OK)
       } catch (err) {
         throw new Error('The specified working directory does not exist or is not readable.')
       }
 
       try {
-        await fs.access(target, fs.constants.R_OK)
+        await fs.promises.access(target, fs.constants.R_OK)
       } catch (err) {
         throw new Error('The specified destination directory does not exist or is not readable.')
       }
@@ -50,7 +50,7 @@ app
         // .disabled and .objectdisabled exist in the Starbound asset files
         //   we're ignoring them for now, because we probably shouldn't be JSON patching a disabled file o_O
         '*.disabled', // ignored for now. @todo: reconsider?
-        '*.objectdisabled',  // ignored for now. @todo: reconsider?
+        '*.objectdisabled', // ignored for now. @todo: reconsider?
         '*.ase' // no idea why an ASE file is in the Starbound assets...lol Chucklefish.
       ]
 
@@ -92,10 +92,8 @@ app
         // unpatchable files fall into this case
         if (unpatchableExtensions.includes(path.extname(filePath).toLowerCase()) || unpatchableFiles.includes(path.basename(filePath).toLowerCase())) {
           try {
-            await fs.ensureDir(path.dirname(destFilepath))
-            await fs.copy(filePath, destFilepath, {
-              overwrite: true
-            })
+            await fs.promises.mkdir(path.dirname(destFilepath), { recursive: true }) // using recursive:true to ignore if it already existed
+            await fs.promises.copyFile(filePath, destFilepath)
           } catch (err) {
             console.error(`failed to copy mod file to ${destFilepath}`)
             console.error(err)
@@ -107,16 +105,14 @@ app
 
         // newly introduced files fall into this case
         try {
-          await fs.access(assetFilepath, fs.constants.R_OK)
+          await fs.promises.access(assetFilepath, fs.constants.R_OK)
         } catch (_err) {
           console.log(`asset ${relFilepath} does not seem to exist in Starbound asset files...`)
           console.log(`copying file to ${destFilepath}`)
 
           try {
-            await fs.ensureDir(path.dirname(destFilepath))
-            await fs.copy(filePath, destFilepath, {
-              overwrite: true
-            })
+            await fs.promises.mkdir(path.dirname(destFilepath), { recursive: true }) // using recursive:true to ignore if it already existed
+            await fs.promises.copyFile(filePath, destFilepath)
           } catch (err) {
             console.error('failed to copy mod file to ' + destFilepath)
             console.error(err)
@@ -133,7 +129,7 @@ app
         let modifiedFile = null
 
         try {
-          originalFile = JSON.parse(stripComments(await fs.readFile(assetFilepath, 'utf8')))
+          originalFile = JSON.parse(stripComments(await fs.promises.readFile(assetFilepath, 'utf8')))
         } catch (err) {
           console.error(`failed to load ${relFilepath} from Starbound asset files`)
           console.error(err)
@@ -142,7 +138,7 @@ app
         }
 
         try {
-          modifiedFile = JSON.parse(stripComments(await fs.readFile(filePath, 'utf8')))
+          modifiedFile = JSON.parse(stripComments(await fs.promises.readFile(filePath, 'utf8')))
         } catch (err) {
           console.error(`failed to load ${relFilepath} from modded asset files`)
           console.error(err)
@@ -152,8 +148,8 @@ app
 
         const diff = patch.compare(originalFile, modifiedFile)
         try {
-          const jsonDiff = JSON.stringify(diff, null, 2).replace("\n", "\r\n") // tslint:disable-line:quotemark
-          await fs.writeFile(destFilepath, jsonDiff)
+          const jsonDiff = JSON.stringify(diff, null, 2).replace('\n', '\r\n')
+          await fs.promises.writeFile(destFilepath, jsonDiff)
         } catch (err) {
           console.error(`failed to write mod patch file to ${destFilepath}`)
           console.error(err)

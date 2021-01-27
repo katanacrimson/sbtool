@@ -6,7 +6,7 @@
 // @url <https://github.com/damianb/sbtool>
 //
 
-import * as fs from 'fs-extra'
+import * as fs from 'fs'
 import * as path from 'path'
 
 import * as app from 'commander'
@@ -14,7 +14,7 @@ import * as app from 'commander'
 import * as readdir from 'recursive-readdir'
 import * as sharp from 'sharp'
 
-const pkg = require('../package.json')
+const pkg = JSON.parse(fs.readFileSync('../package.json').toString())
 
 app
   .version(pkg.version, '-v, --version')
@@ -24,18 +24,19 @@ app
       const target = path.resolve(process.cwd(), destDir)
 
       try {
-        await fs.access(target, fs.constants.R_OK)
+        await fs.promises.access(target, fs.constants.R_OK)
       } catch (err) {
         throw new Error('The specified target directory does not exist or is not readable.')
       }
 
-      const evaluator = (file: string, stats: fs.Stats) => {
+      const evaluator = (file: string, stats: fs.Stats): boolean => {
         return (stats.isFile() && path.extname(file) !== '.png')
       }
 
       const files = await readdir(target, [evaluator])
 
       let failed = false
+      let totalSaved = 0
       for (const filePath of files) {
         // sanity check
         if (!filePath.startsWith(target)) {
@@ -53,13 +54,13 @@ app
           continue
         }
 
-        const originalStat = await fs.stat(filePath)
-        const crushedStat = await fs.stat(filePath + '.crushed')
+        const originalStat = await fs.promises.stat(filePath)
+        const crushedStat = await fs.promises.stat(filePath + '.crushed')
 
         if (originalStat.size <= crushedStat.size) {
           console.log(`not crushing ${filePath}, original is smaller than crushed variant`)
           try {
-            await fs.unlink(filePath + '.crushed')
+            await fs.promises.unlink(filePath + '.crushed')
           } catch (err) {
             console.error(`failed to remove crushed file ${filePath + '.crushed'}`)
             console.error(err)
@@ -68,7 +69,8 @@ app
           }
         } else {
           try {
-            await fs.move(filePath + '.crushed', filePath, { overwrite: true })
+            await fs.promises.copyFile(filePath + '.crushed', filePath)
+            await fs.promises.unlink(filePath + '.crushed')
           } catch (err) {
             console.error(`failed to replace file ${filePath}`)
             console.error(err)
@@ -76,12 +78,23 @@ app
             continue
           }
 
-          console.log(`crushed ${filePath} down to ${crushedStat.size} bytes, saved ${originalStat.size - crushedStat.size} bytes`)
+          const savedBytes = originalStat.size - crushedStat.size
+          totalSaved += savedBytes
+
+          console.log(`crushed ${filePath} down to ${crushedStat.size} bytes, saved ${savedBytes} bytes`)
         }
       }
 
-      console.log(failed ? 'failed' : 'done')
-      process.exit(failed ? 1 : 0)
+      console.log('failed')
+
+      if (failed) {
+        console.log('failed')
+        process.exit(1)
+      }
+
+      console.log('done')
+      console.log(`saved ${totalSaved} bytes in total`)
+      process.exit(0)
     } catch (err) {
       console.error(err)
       process.exit(1)
